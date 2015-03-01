@@ -22,10 +22,11 @@ int Events::addListener(SDL_EventType type, Events::Listener listener) {
 	if (iter == Events::listeners.end()) {
 		// Create vector of listeners for the event type if necessary
 		Events::listeners[type] = std::vector<Events::Listener>();
+		Events::listeners.find(type)->second.push_back(listener);
+	} else {
+		// Add the new listener to the vector
+		iter->second.push_back(listener);
 	}
-
-	// Add the new listener to the vector
-	Events::listeners.find(type)->second.push_back(listener);
 
 	return 0;
 
@@ -49,6 +50,15 @@ int Events::invokeListeners(SDL_EventType type, SDL_Event& ev) {
 }
 
 
+int Events::addTick(Events::Listener tick) {
+
+	//
+	Events::tick = tick;
+	return 0;
+
+}
+
+
 int Events::mainloop() {
 
 	//
@@ -60,7 +70,6 @@ int Events::mainloop() {
 	while (Events::running) {
 		while (SDL_PollEvent(&ev) > 0) {
 			Events::invokeListeners((SDL_EventType)ev.type, ev);
-			SDL_Log("Polling event...\n");
 		}
 
 		//Animation::tick();
@@ -74,5 +83,14 @@ int Events::mainloop() {
 	//IMG_Quit();
 
 	return 0;
+
+}
+
+
+int Events::quit(int status) {
+
+	//
+	Events::running = false;
+	return status;
 
 }

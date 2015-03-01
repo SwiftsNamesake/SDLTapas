@@ -129,7 +129,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>python upload.py -P=C:/SwiftLibraries/ -H=include/SDLTapas/ -L=lib/x64/</Command>
+      <Command>python C:/Users/Jonatan/Desktop/Python/upload.py -P=C:/SwiftLibraries/ -H=include/SDLTapas/ -L=lib/x64/</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Uploading headers and library files.</Message>
@@ -139,6 +139,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="Calligraphy.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Context.h" />
@@ -146,15 +147,15 @@
     <ClInclude Include="Meshes.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utilities.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="Meshes.cpp" />
     <ClCompile Include="Utilities.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="upload.py" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
