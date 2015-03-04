@@ -145,6 +145,7 @@
     <ClInclude Include="Context.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Meshes.h" />
+    <ClInclude Include="SDLTapas.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Window.h" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="Meshes.cpp" />
+    <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>

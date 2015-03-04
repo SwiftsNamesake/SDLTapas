@@ -162,11 +162,13 @@ void Draw::sphere(GLenum primitive, float radius) {
 
 
 		glBegin(primitive);
+		
 		glColor3f(static_cast<float>(static_cast<int>((radius + leftX)/dx)%2), 0.0f, static_cast<float>(static_cast<int>(1 + (radius + leftX)/dx)%2));
 		for (int segment = 0; segment <= segments; ++segment) {
 			glVertex3f(leftX, radiusLeft  * sine(segment*angle), radiusLeft  * cosine(segment*angle));
 			glVertex3f(rightX, radiusRight * sine(segment*angle), radiusRight * cosine(segment*angle));
 		}
+
 		glEnd();
 
 	}
@@ -244,6 +246,58 @@ void Draw::cone(GLenum primitive, float radius, float height) {
 void Draw::pyramid(GLenum primitive, float dx, float dz, float height) {
 
 	//
+	static float colours[][3] = {{ 0.0f,   0.0f,  0.0f },
+	                             { 0.45f,  0.0f,  0.12f },
+		                         { 0.743f, 0.51f, 0.89f },
+		                         { 0.215f, 0.63f, 0.64f },
+		                         { 0.0f,   0.54f, 0.01f }};
+
+
+	glBegin(primitive);
+	  glColor3f(colours[0][0], colours[0][1], colours[0][2]);
+
+	  glVertex3f(-dx/2, -height/2, dz/2);
+	  glVertex3f( dx/2, -height/2, dz/2);
+	  glVertex3f( 0.0f,  height/2, 0.0f);
+	glEnd();
+
+
+	glBegin(primitive);
+	  glColor3f(colours[1][0], colours[1][1], colours[1][2]);
+
+	  glVertex3f(-dx/2, -height/2, -dz/2);
+	  glVertex3f( dx/2, -height/2, -dz/2);
+	  glVertex3f( 0.0f,  height/2,  0.0f);
+	glEnd();
+
+
+	glBegin(primitive);
+	  glColor3f(colours[2][0], colours[2][1], colours[2][2]);
+
+	  glVertex3f(-dx/2, -height/2, -dz/2);
+	  glVertex3f(-dx/2, -height/2,  dz/2);
+	  glVertex3f( 0.0f,  height/2,  0.0f);
+	glEnd();
+
+
+	glBegin(primitive);
+	  glColor3f(colours[3][0], colours[3][1], colours[3][2]);
+
+	  glVertex3f(dx/2, -height/2, -dz/2);
+	  glVertex3f(dx/2, -height/2,  dz/2);
+	  glVertex3f(0.0f,  height/2,  0.0f);
+	glEnd();
+
+
+	//
+	glBegin(GL_QUADS);
+	  glColor3f(colours[4][0], colours[4][1], colours[4][2]);
+
+	  glVertex3f(-dx/2, -height/2, -dz/2);
+	  glVertex3f( dx/2, -height/2, -dz/2);
+	  glVertex3f( dx/2, -height/2,  dz/2);
+	  glVertex3f(-dx/2, -height/2,  dz/2);
+	glEnd();
 
 
 }

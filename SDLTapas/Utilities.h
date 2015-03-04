@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  * Utilities.h
  * Various assorted helper functions and definitions, including math and matrices
@@ -34,10 +34,11 @@ namespace Utilities {
 
 	// Constants
 	const double pi = M_PI;
+	const double π  = M_PI;
 
 	// TODO: Optimise conversions or only use doubles (truncating as the final step) (?)
 	template<class Num> Num rad(Num deg) { return static_cast<Num>(deg*pi/180.0); } // Degrees to radians
-	template<class Num> Num deg(Num rad) { return static_cast<Num>(deg*180.0/pi); } // Radians to degrees
+	template<class Num> Num deg(Num rad) { return static_cast<Num>(rad*180.0/pi); } // Radians to degrees
 
 	template<class Num> Num   sine(Num deg) { return static_cast<Num>(sin(rad(deg))); }
 	template<class Num> Num cosine(Num deg) { return static_cast<Num>(cos(rad(deg))); }
