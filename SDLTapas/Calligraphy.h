@@ -57,7 +57,7 @@ namespace Calligraphy {
 
 	}
 
-	GLint renderText(TTF_Font* font, SDL_Color fill, const char* text) {
+	int renderText(TTF_Font* font, SDL_Color fill, const char* text) {
 
 		// Generates a texture with the desired text
 		SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, fill);
@@ -68,9 +68,9 @@ namespace Calligraphy {
 
 		//SDL_Surface* corrected = 
 		
-		//GLint index = Textures::
+		int index = Textures::loadTexture(surface, GL_LINEAR, GL_LINEAR);
 		
-		return 0;
+		return index;
 
 	}
 
