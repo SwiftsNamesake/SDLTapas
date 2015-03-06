@@ -301,3 +301,24 @@ void Draw::pyramid(GLenum primitive, float dx, float dz, float height) {
 
 
 }
+
+
+void spiral(GLenum primitive, float radius, float height, float revolutions) {
+
+	// Renders a one-dimensional spiral
+	// TODO: Come up with a better name for dy/revolution (height)
+
+	int segments = 18;           // Segments per revolution
+	float delta  = 360/segments; // Internal angle of a single segment
+
+	glBegin(primitive);
+	
+	for (int segment = 0; segment < segments * revolutions; ++segment) {
+		float dy = height * segment/segments;
+		glColor3f(0.00f, 0.30f, 0.45f);
+		glVertex3f(cosine(segment*delta), dy, sine(segment*delta));
+	}
+
+	glEnd();
+
+}

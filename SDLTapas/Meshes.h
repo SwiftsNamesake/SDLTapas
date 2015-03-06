@@ -46,6 +46,8 @@ namespace Draw {
 	void cylinder(GLenum, float, float);
 	void cone(GLenum, float, float);
 	void pyramid(GLenum, float, float, float);
+	// spiral, dna, torus
+	void spiral(GLenum, float, float, float);
 
 	void grid(float);
 

@@ -8,7 +8,8 @@
  *
  */
 
-/* TODO | -
+/* TODO | - Debugging
+ *          -- Debug configuration
  *        -
  *
  * SPEC | -

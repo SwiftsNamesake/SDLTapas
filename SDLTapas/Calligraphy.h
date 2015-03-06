@@ -42,9 +42,11 @@ namespace Calligraphy {
 		TTF_Font* font = TTF_OpenFont(fontname, size);
 
 		if (font == NULL) {
-			SDL_Log("Couldn't initialise font (%s).\n", fontname);
+			OutputDebugStringA("Couldn't initialise font (%s).\n");//, fontname);
 			return NULL;
 		}
+
+		return font;
 
 		// Addional font attributes
 		TTF_SetFontOutline(font, outline);
@@ -63,12 +65,15 @@ namespace Calligraphy {
 		SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, fill);
 
 		if (surface == NULL) {
-			SDL_Log("Unable to render text.\n");
+			//SDL_Log("Unable to render text.\n");
+			OutputDebugStringA("Unable to render text.\n");
+			return (-1);
 		}
 
-		//SDL_Surface* corrected = 
-		
-		int index = Textures::loadTexture(surface, GL_LINEAR, GL_LINEAR);
+		//SDL_Surface* corrected = (Textures::pixelFormat(surface->format) == -1) ? Textures::normalise(surface) : surface; //
+		SDL_Surface* corrected = Textures::normalise(surface);
+		IMG_SavePNG(corrected, "text.png");
+		int index = Textures::loadTexture(corrected, GL_LINEAR, GL_LINEAR);
 		
 		return index;
 
