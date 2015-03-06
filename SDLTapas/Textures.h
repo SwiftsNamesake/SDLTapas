@@ -46,7 +46,8 @@ namespace Textures {
 	// Variables
 	// TODO: Rename texCount (?)
 	static const int texCount = 32;		// Maximum number of textures
-	static GLuint textureIDs[texCount];	// Stores texture IDs
+	//static GLuint textureIDs[texCount];	// Stores texture IDs
+	extern GLuint textureIDs[texCount];	// Stores texture IDs
 
 	//int texIndex = 0; // 
 	//int texNum   = 2; // What's this for? (cf. event loop; I think I'm using it for 'flicking' through textures)

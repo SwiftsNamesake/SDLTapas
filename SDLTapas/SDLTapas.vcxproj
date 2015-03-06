@@ -93,6 +93,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>python C:/Users/Jonatan/Desktop/Python/upload.py -P=C:/SwiftLibraries/ -H=include/SDLTapas/ -L=lib/Debug/x64/</Command>
+      <Message>Uploading headers and library files.</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -129,7 +133,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>python C:/Users/Jonatan/Desktop/Python/upload.py -P=C:/SwiftLibraries/ -H=include/SDLTapas/ -L=lib/x64/</Command>
+      <Command>python C:/Users/Jonatan/Desktop/Python/upload.py -P=C:/SwiftLibraries/ -H=include/SDLTapas/ -L=lib/Release/x64/</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Uploading headers and library files.</Message>
