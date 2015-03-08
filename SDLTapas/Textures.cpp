@@ -57,27 +57,32 @@ SDL_Surface* Textures::normalise(SDL_Surface* surface) {
 
 int Textures::queueTexture(const char* filename, GLint minfiltering, GLint maxfiltering) {
 
-		//
+	//
 
-		// TODO: Coupling between this function and loadTexture
-		// TODO: Handle errors (indirectly, since we can't detect errors until we invoke Texture::loadTexture)
-		// TODO: Rename (?)
+	// TODO: What happens with the indices when loadTexture is invoked separately?
 
-		// This function is necessary if we want to declare a namespace of texture indeces and initialize it statically. The alternative (which I resorted to originally)
-		// is to create a separate function or constructor (incuring a lot of duplication) which initializes each member once OpenGL is ready for business.
+	// TODO: Coupling between this function and loadTexture
+	// TODO: Handle errors (indirectly, since we can't detect errors until we invoke Texture::loadTexture)
+	// TODO: Rename (?)
 
-		// TODO: Vector of structs? Move semantics? Is this the best way to do it?
-		SDL_Log("Queueing texture: %s\n", filename);
+	// TODO: Return a size_t (?)
+	// TODO: Queueing pre-loaded surfaces
+		
+	// This function is necessary if we want to declare a namespace of texture indeces and initialize it statically. The alternative (which I resorted to originally)
+	// is to create a separate function or constructor (incuring a lot of duplication) which initializes each member once OpenGL is ready for business.
 
-		Textures::queuedTextures.push_back({
-			filename,
-			minfiltering,
-			maxfiltering
-		});
+	// TODO: Vector of structs? Move semantics? Is this the best way to do it?
+	SDL_Log("Queueing texture: %s\n", filename);
 
-		return Textures::count++;
+	Textures::queuedTextures.push_back({
+		filename,
+		minfiltering,
+		maxfiltering
+	});
 
-	}
+	return Textures::queuedTextures.size() - 1; // Index of the queued texture
+
+}
 
 
 int Textures::loadQueuedTextures() {
@@ -152,45 +157,18 @@ int Textures::loadTexture(SDL_Surface* data, GLint minfiltering, GLint maxfilter
 	data->refcount += 1;
 	SDL_LockSurface(data);
 
-	/*
-	//
 	// Refine the formatting check below and use it for all textures
-	GLenum gpuFormat = Textures::pixelFormat(data->format); //
-	GLenum type      = GL_UNSIGNED_BYTE;                    //
-
-	if (gpuFormat == (-1)) {
-		OutputDebugStringA("Invalid texture format.\n");
-		//SDL_Log();
-		return (-1);
-	}*/
-
-	GLuint gpuFormat; //
 	//GLuint srcFormat; //
-	GLenum type = GL_UNSIGNED_BYTE;
-	Uint8 colours = data->format->BytesPerPixel;
-
-
-	if (colours == 4) {     // contains an alpha channel
-
-		if (data->format->Rmask == 0x000000ff) {
-			//OutputDebugStringA("Rmask=0x%08x, Gmask=0x%08x, Bmask=0x%08x, Amask=0x%08x", data->format->Rmask, data->format->Gmask, data->format->Bmask, data->format->Amask);
-			gpuFormat = GL_RGBA;
-		} else {
-			gpuFormat = GL_BGRA;
-		}
-	} else if (colours == 3) {    // no alpha channel
-
-		if (data->format->Rmask == 0x000000ff)
-			gpuFormat = GL_RGB;
-		else
-			gpuFormat = GL_BGR;
-	} else {
-		//OutputDebugStringA("warning: the image is not truecolor..  this will probably break\n");
-		// this error should not go unhandled
+	GLuint gpuFormat = Textures::pixelFormat(data->format); //
+	GLenum type      = GL_UNSIGNED_BYTE;
+	Uint8 colours    = data->format->BytesPerPixel;
+	
+	
+	if (gpuFormat == (-1)) {
+		SDL_Log("Invalid texture format.\n");
+		return (-1);
 	}
 	
-	//SDL_Log("%d\n\n", data->format->BitsPerPixel);
-	//SDL_Log("%d|%d\n", data->w, data->h);
 	//glEnable(GL_TEXTURE_2D);
 
 	SDL_Log("Loading texture #%d.\n", Textures::count + 1);
@@ -198,6 +176,7 @@ int Textures::loadTexture(SDL_Surface* data, GLint minfiltering, GLint maxfilter
 	
 	glGenTextures(1, &Textures::textureIDs[count]);
 	SDL_Log("Gen one texture error : %d\n", glGetError());
+
 	glBindTexture(GL_TEXTURE_2D, Textures::textureIDs[Textures::count]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data->w, data->h, 0, gpuFormat, type, data->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minfiltering);
@@ -259,3 +238,10 @@ GLenum Textures::pixelFormat(SDL_PixelFormat* format) {
 	}
 
 }
+
+
+
+//-----------------------------------------------------------------------------------------------------------
+// Utility functions
+//-----------------------------------------------------------------------------------------------------------
+//GLuint Textures::get(size_t index) { return textureIDs[index]; }

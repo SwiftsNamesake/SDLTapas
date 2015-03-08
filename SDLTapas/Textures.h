@@ -8,7 +8,7 @@
  *
  */
 
-/* TODO | -
+/* TODO | - Organise the function definitions
  *        -
  *
  * SPEC | -
@@ -35,7 +35,7 @@
 // Forward declarations
 //-----------------------------------------------------------------------------------------------------------
 namespace Textures {
-
+	
 	// Classes
 	struct TextureArgs {
 		const char* filename;
@@ -72,5 +72,8 @@ namespace Textures {
 	int loadTexture(SDL_Surface* data, GLint minfiltering, GLint maxfiltering);
 
 	int deleteTextures();
+
+	// Utility functions
+	//GLuint get(size_t index); // { return textureIDs[index]; }
 
 }

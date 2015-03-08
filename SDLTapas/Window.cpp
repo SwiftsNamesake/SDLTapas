@@ -23,6 +23,7 @@
 int Window::InitSubsystems() {
 
 	// Initialise SDL and its subsystems (SDL_TTF for fonts and text, SDL_IMG for loading images)
+	// TODO: Audio
 	int errSDL, errTTF, errIMG;
 
 	if (((errSDL = SDL_Init(SDL_INIT_EVERYTHING)) == -1) ||  // Negative one indicates failure

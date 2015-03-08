@@ -20,87 +20,128 @@ using namespace Utilities;
 //-----------------------------------------------------------------------------------------------------------
 // Geometry
 //-----------------------------------------------------------------------------------------------------------
-void Draw::cube(GLenum primitive, float dx, float dy, float dz) {
+void Draw::plane(GLenum primitive, size_t ia, size_t ib, size_t ic, GLColor color, float a, float b, float c, float da, float db) {
+
+	// Draws a plane using the deprecated OpenGL immediate mode API
+	//
+
+	//SDL_Log("Drawing coloured plane.\n");
+
+	float vertices[][3] = {{ a - da/2, b - db/2, c },
+	                       { a + da/2, b - db/2, c },
+	                       { a + da/2, b + db/2, c },
+	                       { a - da/2, b + db/2, c }};
+
+	glBegin(primitive);
+	  glColor4f(color.r, color.g, color.b, color.a);  
+
+	  glVertex3f(vertices[0][ia], vertices[0][ib], vertices[0][ic]);
+	  glVertex3f(vertices[1][ia], vertices[1][ib], vertices[1][ic]);
+	  glVertex3f(vertices[2][ia], vertices[2][ib], vertices[2][ic]);
+	  glVertex3f(vertices[3][ia], vertices[3][ib], vertices[3][ic]);
+	glEnd();
+
+}
+
+
+void Draw::plane(GLenum primitive, size_t ia, size_t ib, size_t ic, GLuint texture, float a, float b, float c, float da, float db) {
+
+	// Draws a plane using the deprecated OpenGL immediate mode API
+	//
+
+	// TODO: Normals (?)
+
+	//SDL_Log("Drawing textured plane.\n");
+
+	// TODO: How are static variables that depend on function arguments treated?
+	float vertices[][3] = {{ a - da/2, b - db/2, c },
+	                       { a + da/2, b - db/2, c },
+	                       { a + da/2, b + db/2, c },
+	                       { a - da/2, b + db/2, c }};
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glBegin(primitive);
+	  glTexCoord2f(0.0f, 1.0f);
+	  glVertex3f(vertices[0][ia], vertices[0][ib], vertices[0][ic]);
+
+	  glTexCoord2f(1.0f, 1.0f);
+	  glVertex3f(vertices[1][ia], vertices[1][ib], vertices[1][ic]);
+
+	  glTexCoord2f(1.0f, 0.0f);
+	  glVertex3f(vertices[2][ia], vertices[2][ib], vertices[2][ic]);
+
+	  glTexCoord2f(0.0f, 0.0f);
+	  glVertex3f(vertices[3][ia], vertices[3][ib], vertices[3][ic]);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+
+}
+
+
+// TODO: Make sure the indeces are correct (especially w.r.t. texture coordinates)
+void Draw::planeXY(GLenum primitive, GLColor color, float dx, float dy) { plane(primitive, 0, 1, 2, color, 0.0f, 0.0f, 0.0f, dx, dy); }
+void Draw::planeXZ(GLenum primitive, GLColor color, float dx, float dz) { plane(primitive, 0, 2, 1, color, 0.0f, 0.0f, 0.0f, dx, dz); }
+void Draw::planeYZ(GLenum primitive, GLColor color, float dy, float dz) { plane(primitive, 2, 0, 1, color, 0.0f, 0.0f, 0.0f, dy, dz); }
+
+void Draw::planeXY(GLenum primitive, GLuint texture, float dx, float dy) { plane(primitive, 0, 1, 2, texture, 0.0f, 0.0f, 0.0f, dx, dy); }
+void Draw::planeXZ(GLenum primitive, GLuint texture, float dx, float dz) { plane(primitive, 0, 2, 1, texture, 0.0f, 0.0f, 0.0f, dx, dz); }
+void Draw::planeYZ(GLenum primitive, GLuint texture, float dy, float dz) { plane(primitive, 2, 0, 1, texture, 0.0f, 0.0f, 0.0f, dy, dz); }
+
+
+void Draw::cube(GLenum primitive, GLColor front, GLColor back, GLColor top, GLColor bottom, GLColor left, GLColor right, float dx, float dy, float dz) {
 
 	// Renders a cube (or box) in immediate-mode
 	// Should return a buffer instead.
 	// TODO: Add colour, texture, alpha, etc.
 
 	// No floating-point colour type?
-	float front[]  = { 0.0f,   0.0f,  0.0f },
-	      back[]   = { 0.45f,  0.0f,  0.12f },
-		  left[]   = { 0.743f, 0.51f, 0.89f },
-		  right[]  = { 0.215f, 0.63f, 0.64f },
-		  top[]    = { 0.0f,   0.54f, 0.01f },
-		  bottom[] = { 0.03f,  0.9f,  0.95f };
+	/*
+	static SDL_Color front  = { 0,   0,   0,   255 };
+	static SDL_Color back   = { 114, 0,   30,  255 };
+	static SDL_Color left   = { 189, 130, 226, 255 };
+	static SDL_Color right  = { 54,  160, 163, 255 };
+	static SDL_Color top    = { 0,   137, 2,   255 };
+	static SDL_Color bottom = { 7,   229, 242, 255 };
+	*/
 
-	// Front
-	glBegin(primitive);
-	  glColor3f(front[0], front[1], front[2]);
-	  glNormal3d(0.0, 0.0, 1.0);
+	//glBegin(primitive);
 
-	  glVertex3f(-dx/2,  dy/2, dz/2);
-	  glVertex3f( dx/2,  dy/2, dz/2);
-	  glVertex3f( dx/2, -dy/2, dz/2);
-	  glVertex3f(-dx/2, -dy/2, dz/2);
-	glEnd();
+	// plane XY
+	plane(primitive, 0, 1, 2, front, 0.0f, 0.0f,  dz/2, dx, dy); // Front
+	plane(primitive, 0, 1, 2, back,  0.0f, 0.0f, -dz/2, dx, dy); // Back
 
-	// Back
-	glBegin(primitive);
-	  glColor3f(back[0], back[1], back[2]);
-	  glNormal3d(0.0, 0.0, -1.0);
+	// plane XZ
+	plane(primitive, 0, 2, 1, top,    0.0f, 0.0f,  dy/2, dx, dz); // Top
+	plane(primitive, 0, 2, 1, bottom, 0.0f, 0.0f, -dy/2, dx, dz); // Bottom
 
-	  glVertex3f(-dx/2,  dy/2, -dz/2);
-	  glVertex3f( dx/2,  dy/2, -dz/2);
-	  glVertex3f( dx/2, -dy/2, -dz/2);
-	  glVertex3f(-dx/2, -dy/2, -dz/2);
-	glEnd();
+	// Plane YZ
+	plane(primitive, 2, 0, 1, left,  0.0f, 0.0f, -dz/2, dy, dz); // Left
+	plane(primitive, 2, 0, 1, right, 0.0f, 0.0f,  dz/2, dy, dz); // Right
 
-	// Left
-	glBegin(primitive);
-	  glColor3f(left[0], left[1], left[2]);
-	  glNormal3d(-1.0, 0.0, 0.0);
+	//glEnd();
 
-	  glVertex3f(-dx/2,  dy/2,  dz/2);
-	  glVertex3f(-dx/2,  dy/2, -dz/2);
-	  glVertex3f(-dx/2, -dy/2, -dz/2);
-	  glVertex3f(-dx/2, -dy/2,  dz/2);
-	glEnd();
+}
 
-	// Right
-	glBegin(primitive);
-	  glColor3f(right[0], right[1], right[2]);
-	  glNormal3d(1.0, 0.0, 0.0);
 
-	  glVertex3f(dx/2,  dy/2,  dz/2);
-	  glVertex3f(dx/2,  dy/2, -dz/2);
-	  glVertex3f(dx/2, -dy/2, -dz/2);
-	  glVertex3f(dx/2, -dy/2,  dz/2);
-	glEnd();
+void Draw::cube(GLenum primitive, GLuint front, GLuint back, GLuint top, GLuint bottom, GLuint left, GLuint right, float dx, float dy, float dz) {
 
-	// Top
-	glBegin(primitive);
-	  glColor3f(top[0], top[1], top[2]);
-	  glNormal3d(0.0, 1.0, 1.0);
+	//
 
-	  glVertex3f(-dx/2, dy/2, -dz/2);
-	  glVertex3f(-dx/2, dy/2,  dz/2);
-	  glVertex3f( dx/2, dy/2,  dz/2);
-	  glVertex3f( dx/2, dy/2, -dz/2);
-	glEnd();
+	// plane XY
+	plane(primitive, 0, 1, 2, front, 0.0f, 0.0f, dz/2, dx, dy); // Front
+	plane(primitive, 0, 1, 2, back, 0.0f, 0.0f, -dz/2, dx, dy); // Back
 
-	// Bottom
-	glBegin(primitive);
-	  glColor3f(bottom[0], bottom[1], bottom[2]);
-	  glNormal3d(0.0, -1.0, 0.0);
+	// plane XZ
+	plane(primitive, 0, 2, 1, top, 0.0f, 0.0f, dy/2, dx, dz); // Top
+	plane(primitive, 0, 2, 1, bottom, 0.0f, 0.0f, -dy/2, dx, dz); // Bottom
 
-	  glVertex3f(-dx/2, -dy/2, -dz/2);
-	  glVertex3f(-dx/2, -dy/2,  dz/2);
-	  glVertex3f( dx/2, -dy/2,  dz/2);
-	  glVertex3f( dx/2, -dy/2, -dz/2);
-	glEnd();
+	// Plane YZ
+	plane(primitive, 2, 0, 1, left, 0.0f, 0.0f, -dz/2, dy, dz); // Left
+	plane(primitive, 2, 0, 1, right, 0.0f, 0.0f, dz/2, dy, dz); // Right
 
-	glDisable(GL_TEXTURE_2D);
 
 }
 
@@ -184,26 +225,26 @@ void Draw::grid(float length) {
 	// Actual grid (rather than just axes)
 
 	glBegin(GL_LINES);
-	// X-axis (red)
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(-length, 0.0f, 0.0f);
-	glVertex3f(length, 0.0f, 0.0f);
+	  // X-axis (red)
+	  glColor3f(1.0f, 0.0f, 0.0f);
+	  glVertex3f(-length, 0.0f, 0.0f);
+	  glVertex3f(length, 0.0f, 0.0f);
 
-	// Y-axis (green)
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, -length, 0.0f);
-	glVertex3f(0.0f, length, 0.0f);
+	  // Y-axis (green)
+	  glColor3f(0.0f, 1.0f, 0.0f);
+	  glVertex3f(0.0f, -length, 0.0f);
+	  glVertex3f(0.0f, length, 0.0f);
 
-	// Z-axis (blue)
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, -length);
-	glVertex3f(0.0f, 0.0f, length);
+	  // Z-axis (blue)
+	  glColor3f(0.0f, 0.0f, 1.0f);
+	  glVertex3f(0.0f, 0.0f, -length);
+	  glVertex3f(0.0f, 0.0f, length);
 	glEnd();
 
 }
 
 
-void Draw::cylinder(GLenum primitive, float radius, float height) {
+void Draw::cylinder(GLenum primitive, GLColor color, float radius, float height) {
 	
 	//
 	const int segments = 18;
@@ -214,7 +255,7 @@ void Draw::cylinder(GLenum primitive, float radius, float height) {
 	for (int segment = 0; segment <= segments; ++segment) {
 		//
 		float x = radius*cosine(theta*segment), z = radius*sine(theta*segment);
-		glColor3f(0.2f, 0.35f, 0.65f);
+		glColor4f(color.r, color.g, color.b, color.a);
 		glVertex3f(x, -height/2, z);
 		glVertex3f(x,  height/2, z);
 	}
@@ -303,20 +344,21 @@ void Draw::pyramid(GLenum primitive, float dx, float dz, float height) {
 }
 
 
-void Draw::spiral(GLenum primitive, float radius, float height, float revolutions) {
+void Draw::spiral(GLenum primitive, GLColor color, float radius, float dy, float inclination, float revolutions) {
 
 	// Renders a one-dimensional spiral
-	// TODO: Come up with a better name for dy/revolution (height)
+	// TODO: Come up with a better name for dy/revolution (height) (done; cf. inclination)
 
 	int segments = 18;           // Segments per revolution
-	float delta  = 360/segments; // Internal angle of a single segment
+	float delta  = 360.0f/segments; // Internal angle of a single segment
 
 	glBegin(primitive);
 	
 	for (int segment = 0; segment <= segments * revolutions; ++segment) {
-		float dy = height * segment/segments;
-		glColor3f(0.00f, 0.30f, 0.45f);
-		glVertex3f(cosine(segment*delta), dy, sine(segment*delta));
+		float y = inclination * segment/segments;
+		glColor4f(color.r, color.g, color.b, color.a); // TODO: Function for SDL_Color
+		glVertex3f(radius*cosine(segment*delta), y,    radius*sine(segment*delta));
+		glVertex3f(radius*cosine(segment*delta), y+dy, radius*sine(segment*delta));
 	}
 
 	glEnd();
